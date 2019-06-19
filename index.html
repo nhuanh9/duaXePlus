@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body onload="movIMG()">
+<center>
+    <p>Canvas:</p>
+    <canvas id="myCanvas" width="400" height="500" style="border:1px solid #d3d3d3;">Khong ho tro!
+    </canvas>
+</center>
+<script src="js.js"></script>
+<script>
+
+    let car = new theCar(DEFAULT_X, DEFAULT_Y, 20);
+    car.diTrai();
+    move = function (evt) {
+        switch (evt.keyCode) {
+            case 38: {
+                car.diLen();
+                break;
+            }
+            case 40: {
+                car.diXuong();
+                break;
+            }
+            case 37: {
+                car.diTrai();
+                break;
+            }
+            case 39: {
+                car.diPhai();
+                break;
+            }
+        }
+    };
+    movIMG = function () {
+        window.addEventListener('keydown', move);
+    };
+</script>
+</body>
+</html>
