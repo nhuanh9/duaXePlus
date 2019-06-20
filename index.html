@@ -11,46 +11,5 @@
     </canvas>
 </center>
 <script src="js.js"></script>
-<script>
-    let car = new theCar(WIDTH_MAP, HEIGHT_MAP, CAR_SPEED);
-    let Circle = new circle(WIDTH_MAP, HEIGHT_MAP);
-
-    function update() {
-        if (Circle.posY < 500) {
-            Circle.attack(car.posX,car.posY);
-            console.log("car "+car.posY);
-            console.log(Circle.posY);
-        }
-        setTimeout(update, 5);
-    }
-    update();
-    window.onload = function () {
-        movIMG();
-    };
-    car.diTrai();
-    move = function (evt) {
-        switch (evt.keyCode) {
-            case 38: {
-                car.diLen();
-                break;
-            }
-            case 40: {
-                car.diXuong();
-                break;
-            }
-            case 37: {
-                car.diTrai();
-                break;
-            }
-            case 39: {
-                car.diPhai();
-                break;
-            }
-        }
-    };
-    movIMG = function () {
-        window.addEventListener('keydown', move);
-    };
-</script>
 </body>
 </html>
