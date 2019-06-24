@@ -4,7 +4,7 @@ const HEIGHT_MAP = document.getElementById("myCanvas").offsetHeight;
 const CAR_SPEED = 20;
 const SIZE_IMG = 48;
 
-const CIRCLE_SPEED = 10;
+const CIRCLE_SPEED = 5;
 const CIRCLE_SIZE = 20;
 let theCar = function (WIDTH_MAP, HEIGHT_MAP, speed) {
     this.ctx = document.getElementById("myCanvas").getContext("2d");
@@ -53,7 +53,7 @@ let circle = function (WIDTH_MAP, HEIGHT_MAP) {
     this.speed = CIRCLE_SPEED;
     this.ctx = document.getElementById("myCanvas").getContext("2d");
     this.draw = function () {
-        this.ctx.fillStyle = "#FF0000";
+        this.ctx.fillStyle = "#8734ff";
         this.ctx.fillRect(this.posX, this.posY, CIRCLE_SIZE, CIRCLE_SIZE);
     };
     this.clear = function () {
@@ -64,56 +64,79 @@ let circle = function (WIDTH_MAP, HEIGHT_MAP) {
 let boardGame = function () {
     this.car = new theCar(WIDTH_MAP, HEIGHT_MAP, CAR_SPEED);
     this.Circle = new circle(WIDTH_MAP, HEIGHT_MAP);
+    this.Circle1 = new circle(WIDTH_MAP, HEIGHT_MAP);
     this.Circle2 = new circle(WIDTH_MAP, HEIGHT_MAP);
-    this.draw = function () {
-        this.car.drawCar();
-        this.Circle.draw();
+    this.draw = function (Circle, car) {
+        car.drawCar();
+        Circle.draw();
     };
 
-    this.creatNewCircle = function () {
-        if (this.Circle.posY < 500) {
-            this.attack();
+    this.creatNewCircle = function (Circle, car) {
+        if (Circle.posY < 500) {
+            this.attack(Circle, car);
         }
     };
-    this.attack = function () {
-        this.turnDown();
-        if (this.Circle.posY > HEIGHT_MAP * 0.95) {
-            this.Circle.posX = Math.random() * WIDTH_MAP - CIRCLE_SIZE;
-            this.Circle.posY = HEIGHT_MAP * 0.01;
-        } else if (this.isLose()) {
+    this.attack = function (Circle, car) {
+        this.turnDown(Circle);
+        if (Circle.posY > HEIGHT_MAP * 0.95) {
+            Circle.posX = Math.random() * WIDTH_MAP - CIRCLE_SIZE;
+            Circle.posY = HEIGHT_MAP * 0.01;
+        } else if (this.isLose(Circle, car)) {
             confirm("Lose");
-            this.newGame();
+            this.newGame(Circle, car);
         }
-        this.Circle.draw();
+        Circle.draw();
     };
-    this.turnDown = function () {
-        this.Circle.clear();
-        this.Circle.posY += this.Circle.speed;
+    this.turnDown = function (Circle) {
+        Circle.clear();
+        Circle.posY += Circle.speed;
     };
-    this.isLose = function () {
-        let isLoseWidth = (this.Circle.posX >= this.car.posX - SIZE_IMG / 8) && (this.Circle.posX <= this.car.posX + SIZE_IMG * 7 / 8);
-        let isLoseHeight = (this.Circle.posY + CIRCLE_SIZE >= this.car.posY) && (this.Circle.posY + CIRCLE_SIZE <= this.car.posY + SIZE_IMG);
+    this.isLose = function (Circle, car) {
+        let isLoseWidth = (Circle.posX >= car.posX - SIZE_IMG / 8) && (Circle.posX <= car.posX + SIZE_IMG * 7 / 8);
+        let isLoseHeight = (Circle.posY + CIRCLE_SIZE >= car.posY) && (Circle.posY + CIRCLE_SIZE <= car.posY + SIZE_IMG);
         return isLoseHeight && isLoseWidth;
     };
-    this.newGame = function () {
-        this.car.clear();
-        this.Circle.clear();
-        this.Circle.posX = Math.random() * WIDTH_MAP - CIRCLE_SIZE;
-        this.Circle.posY = HEIGHT_MAP * 0.01;
-        this.car.posX = WIDTH_MAP * 0.45;
-        this.car.posY = HEIGHT_MAP * 0.85;
+    this.newGame = function (Circle, car) {
+        car.clear();
+        Circle.clear();
+        Circle.posX = Math.random() * WIDTH_MAP - CIRCLE_SIZE;
+        Circle.posY = HEIGHT_MAP * 0.01;
+        car.posX = WIDTH_MAP * 0.45;
+        car.posY = HEIGHT_MAP * 0.85;
     }
 };
 
 let board = new boardGame();
-board.draw();
+let inSpeed = 100;
+board.draw(board.Circle, board.car);
+board.draw(board.Circle2, board.car);
+board.draw(board.Circle1, board.car);
+
+function speedUp() {
+    inSpeed -= 5;
+    console.log(inSpeed);
+}
 
 function update() {
-    board.creatNewCircle();
-    setTimeout(update, 5);
+    board.creatNewCircle(board.Circle, board.car);
+    setTimeout(update, inSpeed-50);
 }
 
 update();
+
+function update1() {
+    board.creatNewCircle(board.Circle1, board.car);
+    setTimeout(update1, inSpeed - 60);
+}
+
+update1();
+
+function update2() {
+    board.creatNewCircle(board.Circle2, board.car);
+    setTimeout(update2, inSpeed - 70);
+}
+
+update2();
 move = function (evt) {
     switch (evt.keyCode) {
         case 38: {
@@ -138,5 +161,6 @@ movIMG = function () {
     window.addEventListener('keydown', move);
 };
 window.onload = function () {
+
     movIMG();
 };
